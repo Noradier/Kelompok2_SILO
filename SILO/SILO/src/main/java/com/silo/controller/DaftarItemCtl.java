@@ -19,4 +19,8 @@ public class DaftarItemCtl {
         return searchItemCtl.searchAllItem();
     }
     
+    public Object[][] searchItem(String keyword){
+        return searchItemCtl.searchItem(keyword);
+    }
+    
 }

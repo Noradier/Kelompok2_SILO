@@ -29,4 +29,21 @@ public class DBHandler {
         
         return data;
     }
+    
+    public Item[] getItem(String keyword){
+        List<Item> matchedItem = new ArrayList<Item>();
+        for(int i=0; i<items.size(); i++){
+            Item temp = items.get(i);
+            if(temp.getId().toLowerCase().contains(keyword) ||
+                    temp.getTitle().toLowerCase().contains(keyword) ||
+                    temp.getManufacturer().toLowerCase().contains(keyword))
+                matchedItem.add(temp);
+        }
+        
+        Item[] data = new Item[matchedItem.size()];
+        for(int i=0; i<matchedItem.size(); i++)
+            data[i] = matchedItem.get(i);
+        
+        return data;
+    }
 }

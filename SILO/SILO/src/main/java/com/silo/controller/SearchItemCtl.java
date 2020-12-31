@@ -30,4 +30,19 @@ public class SearchItemCtl {
         
         return item;
     }
+    
+    public Object[][] searchItem(String keyword){
+        Item[] items = db.getItem(keyword);
+        
+        Object[][] item = new Object[items.length][4];
+        
+        for(int i=0; i<items.length; i++){
+            item[i][0] = items[i].getId();
+            item[i][1] = items[i].getTitle();
+            item[i][2] = items[i].getManufacturer();
+            item[i][3] = items[i].getNumberOfStock();
+        }
+        
+        return item;
+    }
 }

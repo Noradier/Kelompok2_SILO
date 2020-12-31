@@ -6,6 +6,9 @@
 package com.silo;
 
 import com.silo.controller.DaftarItemCtl;
+import java.awt.Color;
+import java.awt.GridLayout;
+import javax.swing.JPanel;
 
 public class MainPage extends javax.swing.JFrame {
 
@@ -13,13 +16,19 @@ public class MainPage extends javax.swing.JFrame {
      * Creates new form MainPage
      */
     
+    private int state;
+    
+    private static final int showItem = 1;
+    
     DaftarItemCtl daftarItemCtl;
     
     public MainPage() {
         initComponents();
         
+        state = 0;
         header.setVisible(false);
         content.setVisible(false);
+        buttonHolder.setVisible(false);
     }
 
     /**
@@ -33,20 +42,25 @@ public class MainPage extends javax.swing.JFrame {
 
         header = new javax.swing.JPanel();
         addButton = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        searchBar = new javax.swing.JTextField();
         searchButton = new javax.swing.JButton();
         content = new javax.swing.JScrollPane();
         contentList = new javax.swing.JTable();
+        buttonHolder = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         itemMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(800, 600));
         setSize(new java.awt.Dimension(800, 600));
 
         addButton.setText("Add");
 
         searchButton.setText("Search");
+        searchButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                onSearchButtonClick(evt);
+            }
+        });
 
         javax.swing.GroupLayout headerLayout = new javax.swing.GroupLayout(header);
         header.setLayout(headerLayout);
@@ -57,17 +71,17 @@ public class MainPage extends javax.swing.JFrame {
                 .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(addButton)
                     .addGroup(headerLayout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(searchButton)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(528, Short.MAX_VALUE))
         );
         headerLayout.setVerticalGroup(
             headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, headerLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addComponent(addButton)
@@ -99,6 +113,17 @@ public class MainPage extends javax.swing.JFrame {
         });
         content.setViewportView(contentList);
 
+        javax.swing.GroupLayout buttonHolderLayout = new javax.swing.GroupLayout(buttonHolder);
+        buttonHolder.setLayout(buttonHolderLayout);
+        buttonHolderLayout.setHorizontalGroup(
+            buttonHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 80, Short.MAX_VALUE)
+        );
+        buttonHolderLayout.setVerticalGroup(
+            buttonHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 251, Short.MAX_VALUE)
+        );
+
         itemMenu.setText("Item");
         itemMenu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -114,14 +139,21 @@ public class MainPage extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(header, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(content, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(content, javax.swing.GroupLayout.PREFERRED_SIZE, 561, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonHolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(content, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(content, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonHolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 188, Short.MAX_VALUE))
         );
 
         pack();
@@ -130,9 +162,20 @@ public class MainPage extends javax.swing.JFrame {
     private void onItemMenuClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onItemMenuClicked
         // TODO add your handling code here:
         Object[][] item = daftarItemCtl.searchItem();
+        state = showItem;
         
         showItemList(item);
     }//GEN-LAST:event_onItemMenuClicked
+
+    private void onSearchButtonClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onSearchButtonClick
+        // TODO add your handling code here:
+        switch(state){
+            case 1:
+                Object[][] item = daftarItemCtl.searchItem(searchBar.getText().toLowerCase());
+                showItemList(item);
+                break;
+        }
+    }//GEN-LAST:event_onSearchButtonClick
 
     /**
      * @param args the command line arguments
@@ -174,23 +217,23 @@ public class MainPage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
+    private javax.swing.JPanel buttonHolder;
     private javax.swing.JScrollPane content;
     private javax.swing.JTable contentList;
     private javax.swing.JPanel header;
     private javax.swing.JMenu itemMenu;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField searchBar;
     private javax.swing.JButton searchButton;
     // End of variables declaration//GEN-END:variables
+    
+    private javax.swing.JButton[] editButtons;
     
     public void setDaftarItemCtl(DaftarItemCtl daftarItemCtl){
         this.daftarItemCtl = daftarItemCtl;
     }
     
     public void showItemList(Object[][] item){
-        
-        header.setVisible(true);
-        content.setVisible(true);
         
         contentList.setModel(new javax.swing.table.DefaultTableModel(
             item,
@@ -214,5 +257,18 @@ public class MainPage extends javax.swing.JFrame {
             }
         });
         content.setViewportView(contentList);
+        
+        buttonHolder.removeAll();
+        editButtons = new javax.swing.JButton[item.length];
+        for(int i=0; i<item.length; i++){
+            editButtons[i] = new javax.swing.JButton("Edit");
+            editButtons[i].setSize(80,15);
+            editButtons[i].setLocation(0, 16 * i);
+            buttonHolder.add(editButtons[i]);
+        }
+        
+        header.setVisible(true);
+        content.setVisible(true);
+        buttonHolder.setVisible(true);
     }
 }
