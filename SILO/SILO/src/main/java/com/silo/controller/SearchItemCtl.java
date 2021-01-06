@@ -11,12 +11,17 @@ import com.silo.db.Item;
 public class SearchItemCtl {
     
     private DBHandler db;
+    private DaftarItemCtl daftarItemCtl;
 
     public SearchItemCtl(DBHandler db) {
         this.db = db;
     }
+
+    public void setDaftarItemCtl(DaftarItemCtl daftarItemCtl) {
+        this.daftarItemCtl = daftarItemCtl;
+    }
     
-    public Object[][] searchAllItem(){
+    public void searchAllItem(){
         Item[] items = db.getAllItem();
         
         DaftarItemCtl.items = items;
@@ -30,10 +35,14 @@ public class SearchItemCtl {
             item[i][3] = items[i].getNumberOfStock();
         }
         
-        return item;
+        openItem(item);
     }
     
-    public Object[][] searchItem(String keyword){
+    public void openItem(Object[][] item){
+        daftarItemCtl.openItemList(item);
+    }
+    
+    public void searchItem(String keyword){
         Item[] items = db.getItem(keyword);
         
         DaftarItemCtl.items = items;
@@ -47,6 +56,6 @@ public class SearchItemCtl {
             item[i][3] = items[i].getNumberOfStock();
         }
         
-        return item;
+        openItem(item);
     }
 }

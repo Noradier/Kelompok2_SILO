@@ -19,12 +19,14 @@ import java.util.Scanner;
 public class DBHandler {
     private List<Item> items;
     private List<Invoice> invoices;
+    private List<DeliveryNote> deliveryNotes;
     private SimpleDateFormat dateFormat;
     
     public DBHandler(){
         dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         initItem();
         initInvoice();
+        initDeliveryNote();
     }
     
     public void initItem(){
@@ -32,9 +34,9 @@ public class DBHandler {
         
         try{
             File itemDb = new File("ItemDB.txt");
-            Scanner itemDbReader = new Scanner(itemDb);
-            while(itemDbReader.hasNextLine()){
-                String data = itemDbReader.nextLine();
+            Scanner scanner = new Scanner(itemDb);
+            while(scanner.hasNextLine()){
+                String data = scanner.nextLine();
                 String[] str = data.split("/");
                 items.add(new Item(str[0], str[1], str[2], str[3], str[4], str[5], Integer.parseInt(str[6])));
             }
@@ -48,9 +50,9 @@ public class DBHandler {
         
         try{
             File invoiceDb = new File("InvoiceDB.txt");
-            Scanner itemDbReader = new Scanner(invoiceDb);
-            while(itemDbReader.hasNextLine()){
-                String data = itemDbReader.nextLine();
+            Scanner scanner = new Scanner(invoiceDb);
+            while(scanner.hasNextLine()){
+                String data = scanner.nextLine();
                 String[] str = data.split("/");
                 Date orderDate = null, deliveryDate = null;
                 try{
@@ -61,6 +63,30 @@ public class DBHandler {
                 }
                 
                 invoices.add(new Invoice(str[0], str[1], str[2], str[3], orderDate, deliveryDate));
+            }
+        } catch(FileNotFoundException e){
+            
+        }
+    }
+    
+    public void initDeliveryNote(){
+        deliveryNotes = new ArrayList<DeliveryNote>();
+        
+        try{
+            File deliveryNoteDb = new File("DeliveryNoteDB.txt");
+            Scanner scanner = new Scanner(deliveryNoteDb);
+            while(scanner.hasNextLine()){
+                String data = scanner.nextLine();
+                String[] str = data.split("/");
+                Date orderDate = null, deliveryDate = null;
+                try{
+                    orderDate = dateFormat.parse(str[4]);
+                    deliveryDate = dateFormat.parse(str[5]);
+                } catch(ParseException e){
+                    
+                }
+                
+                deliveryNotes.add(new DeliveryNote(str[0], str[1], str[2], str[3], orderDate, deliveryDate));
             }
         } catch(FileNotFoundException e){
             
@@ -149,7 +175,11 @@ public class DBHandler {
         List<Invoice> matchedInvoice = new ArrayList<Invoice>();
         for(int i=0; i<invoices.size(); i++){
             Invoice temp = invoices.get(i);
-            if(temp.getSupplierName().toLowerCase().contains(keyword) ||
+            if(temp.getInvoiceNumber().toLowerCase().contains(keyword) ||
+                    temp.getPoNumber().toLowerCase().contains(keyword) ||
+                    temp.getSupplierName().toLowerCase().contains(keyword) ||
+                    temp.getOrderDateString().toLowerCase().contains(keyword) ||
+                    temp.getDeliveryDateString().toLowerCase().contains(keyword) ||
                     temp.getStatus().toLowerCase().contains(keyword))
                 matchedInvoice.add(temp);
         }
@@ -190,6 +220,68 @@ public class DBHandler {
                 );
             }
             invoiceDbWriter.close();
+        } catch(IOException e){
+            System.out.println("An error occurred.");
+        }
+    }
+    
+    public DeliveryNote[] getAllDeliveryNote(){
+        DeliveryNote[] data = new DeliveryNote[deliveryNotes.size()];
+        for(int i=0; i<deliveryNotes.size(); i++)
+            data[i] = deliveryNotes.get(i);
+        
+        return data;
+    }
+    
+    public DeliveryNote[] getDeliveryNote(String keyword){
+        List<DeliveryNote> matchedDeliveryNote = new ArrayList<DeliveryNote>();
+        for(int i=0; i<deliveryNotes.size(); i++){
+            DeliveryNote temp = deliveryNotes.get(i);
+            if(temp.getInvoiceNumber().toLowerCase().contains(keyword) ||
+                    temp.getDeliveryNoteNumber().toLowerCase().contains(keyword) ||
+                    temp.getCustomerName().toLowerCase().contains(keyword) ||
+                    temp.getOrderDateString().toLowerCase().contains(keyword) ||
+                    temp.getDeliveryDateString().toLowerCase().contains(keyword) ||
+                    temp.getStatus().toLowerCase().contains(keyword))
+                matchedDeliveryNote.add(temp);
+        }
+        
+        DeliveryNote[] data = new DeliveryNote[matchedDeliveryNote.size()];
+        for(int i=0; i<matchedDeliveryNote.size(); i++)
+            data[i] = matchedDeliveryNote.get(i);
+        
+        return data;
+    }
+    
+    public void setDNStatus(String deliveryNoteNumber, String status){
+        for(int i=0; i<deliveryNotes.size(); i++){
+            DeliveryNote temp = deliveryNotes.get(i);
+            if(temp.getDeliveryNoteNumber().equals(deliveryNoteNumber)){
+                temp.setStatus(status);
+                
+                break;
+            }
+        }
+        
+        saveDeliveryNoteIntoDB();
+    }
+    
+    public void saveDeliveryNoteIntoDB(){
+        try{
+            FileWriter deliveryNoteDbWriter = new FileWriter("InvoiceDB.txt");
+            
+            for(int i=0; i<invoices.size(); i++){
+                DeliveryNote temp = deliveryNotes.get(i);
+                deliveryNoteDbWriter.write(
+                    temp.getInvoiceNumber() + "/" +
+                            temp.getDeliveryNoteNumber() + "/" +
+                            temp.getCustomerName() + "/" +
+                            temp.getStatus() + "/" +
+                            temp.getOrderDateString() + "/" +
+                            temp.getDeliveryDateString() + "\n"
+                );
+            }
+            deliveryNoteDbWriter.close();
         } catch(IOException e){
             System.out.println("An error occurred.");
         }

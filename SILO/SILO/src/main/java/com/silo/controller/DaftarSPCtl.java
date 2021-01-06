@@ -21,23 +21,35 @@ public class DaftarSPCtl {
         viewInvoiceCtl = new ViewInvoiceCtl(db);
     }
 
+    public SearchInvoiceCtl getSearchInvoiceCtl() {
+        return searchInvoiceCtl;
+    }
+    
     public ViewInvoiceCtl getViewInvoiceCtl() {
         return viewInvoiceCtl;
     }
 
+    public MainPage getMainPage() {
+        return mainPage;
+    }
+    
     public void setMainPage(MainPage mainPage) {
         this.mainPage = mainPage;
     }
     
-    public Object[][] searchInvoice(){
-        return searchInvoiceCtl.searchAllInvoice();
+    public void searchInvoice(){
+        searchInvoiceCtl.searchAllInvoice();
     }
     
-    public Object[][] searchInvoice(String keyword){
-        return searchInvoiceCtl.searchInvoice(keyword);
+    public void openInvoiceList(Object[][] invoice){
+        mainPage.showInvoice(invoice);
     }
     
-    public void showInvoiceDescription(int i){
-        viewInvoiceCtl.openInvoiceDescription(i);
+    public void searchInvoice(String keyword){
+        searchInvoiceCtl.searchInvoice(keyword);
+    }
+    
+    public void openInvoiceDescription(){
+        viewInvoiceCtl.show();
     }
 }

@@ -11,10 +11,19 @@ import com.silo.db.Invoice;
 
 public class ViewInvoiceCtl {
     private DBHandler db;
+    private DaftarSPCtl daftarSPCtl;
     private InvoiceDescription invoiceDescription;
 
     public ViewInvoiceCtl(DBHandler db) {
         this.db = db;
+    }
+
+    public DaftarSPCtl getDaftarSPCtl() {
+        return daftarSPCtl;
+    }
+
+    public void setDaftarSPCtl(DaftarSPCtl daftarSPCtl) {
+        this.daftarSPCtl = daftarSPCtl;
     }
 
     public void setInvoiceDescription(InvoiceDescription invoiceDescription) {
@@ -25,8 +34,8 @@ public class ViewInvoiceCtl {
         return invoiceDescription;
     }
     
-    public void openInvoiceDescription(int i){
-        Invoice invoice = DaftarSPCtl.invoices[i];
+    public void show(){
+        Invoice invoice = DaftarSPCtl.invoices[daftarSPCtl.getMainPage().getEditedCursor()];
         invoiceDescription.setInvoiceDescriptionLabel(
                 invoice.getInvoiceNumber(),
                 invoice.getPoNumber(),
@@ -35,14 +44,10 @@ public class ViewInvoiceCtl {
                 invoice.getDeliveryDateString(),
                 invoice.getStatus());
         invoiceDescription.setVisible(true);
-        
     }
     
-    public void acceptInvoice(String invoiceNumber){
-        db.setInvoiceStatus(invoiceNumber, "complete");
-    }
-    
-    public void pendingInvoice(String invoiceNumber){
-        db.setInvoiceStatus(invoiceNumber, "pending");
+    public void setInvoiceStatus(String invoice, String status){
+        db.setInvoiceStatus(invoice, status);
+        invoiceDescription.setVisible(false);
     }
 }

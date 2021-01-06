@@ -178,16 +178,22 @@ public class InvoiceDescription extends javax.swing.JFrame {
 
     private void onAcceptButtonClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onAcceptButtonClick
         // TODO add your handling code here:
-        viewInvoiceCtl.acceptInvoice(invoiceNumberLabelFill.getText());
-        this.setVisible(false);
+        acceptInvoice();
     }//GEN-LAST:event_onAcceptButtonClick
 
+    private void acceptInvoice(){
+        viewInvoiceCtl.setInvoiceStatus(viewInvoiceCtl.getDaftarSPCtl().getMainPage().getEditedId(), "completed");
+    }
+    
     private void onPendingButtonClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onPendingButtonClick
         // TODO add your handling code here:
-        viewInvoiceCtl.pendingInvoice(invoiceNumberLabelFill.getText());
-        this.setVisible(false);
+        pendingInvoice();
     }//GEN-LAST:event_onPendingButtonClick
 
+    private void pendingInvoice(){
+        viewInvoiceCtl.setInvoiceStatus(viewInvoiceCtl.getDaftarSPCtl().getMainPage().getEditedId(), "pending");
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton invoiceAcceptButton;
     private javax.swing.JLabel invoiceDeliveryDateLabel;

@@ -6,28 +6,28 @@
 package com.silo;
 
 import com.silo.controller.DaftarItemCtl;
+import com.silo.controller.DaftarSJCtl;
 import com.silo.controller.DaftarSPCtl;
 
 public class MainPage extends javax.swing.JFrame {
     
     private int state;
     private static final int
-            showItem = 1, addItem = 2, editItem = 3,
-            showInvoice = 4, viewInvoice = 5;
-    private static String editedItemId;
+            showItem = 1, showInvoice = 2, showDeliveryNote = 3;
+    private String editedId;
+    private int editedCursor;
     
     DaftarItemCtl daftarItemCtl;
     DaftarSPCtl daftarSPCtl;
+    DaftarSJCtl daftarSJCtl;
     
     public MainPage() {
         initComponents();
-        initItemForm();
         
         state = 0;
         header.setVisible(false);
         content.setVisible(false);
         buttonHolder.setVisible(false);
-        itemForm.setVisible(false);
     }
 
     /**
@@ -44,12 +44,11 @@ public class MainPage extends javax.swing.JFrame {
         searchBar = new javax.swing.JTextField();
         searchButton = new javax.swing.JButton();
         content = new javax.swing.JScrollPane();
-        contentList = new javax.swing.JTable();
-        itemForm = new javax.swing.JPanel();
         buttonHolder = new javax.swing.JScrollPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         itemMenu = new javax.swing.JMenu();
         invoiceMenu = new javax.swing.JMenu();
+        deliveryNoteMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setSize(new java.awt.Dimension(800, 600));
@@ -94,41 +93,12 @@ public class MainPage extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        contentList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Column1", "Column2", "Column3", "Column4", "Column5", "Column6"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        content.setViewportView(contentList);
-
-        javax.swing.GroupLayout itemFormLayout = new javax.swing.GroupLayout(itemForm);
-        itemForm.setLayout(itemFormLayout);
-        itemFormLayout.setHorizontalGroup(
-            itemFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        itemFormLayout.setVerticalGroup(
-            itemFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-
         buttonHolder.setPreferredSize(new java.awt.Dimension(81, 100));
 
         itemMenu.setText("Item");
         itemMenu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                onItemMenuClicked(evt);
+                onItemMenuClick(evt);
             }
         });
         jMenuBar1.add(itemMenu);
@@ -141,6 +111,14 @@ public class MainPage extends javax.swing.JFrame {
         });
         jMenuBar1.add(invoiceMenu);
 
+        deliveryNoteMenu.setText("Delivery Note");
+        deliveryNoteMenu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                onDNMenuClick(evt);
+            }
+        });
+        jMenuBar1.add(deliveryNoteMenu);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -149,14 +127,9 @@ public class MainPage extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(header, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(content)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(buttonHolder, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(itemForm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(content)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(buttonHolder, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -167,298 +140,25 @@ public class MainPage extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(content, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonHolder, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(itemForm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(81, Short.MAX_VALUE))
+                .addContainerGap(188, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void initItemForm(){
-        itemForm = new javax.swing.JPanel();
-        itemBarcodeLabel = new javax.swing.JLabel();
-        itemBarcodeTF = new javax.swing.JTextField();
-        itemTitleLabel = new javax.swing.JLabel();
-        itemTitleTF = new javax.swing.JTextField();
-        itemDescriptionLabel = new javax.swing.JLabel();
-        itemManufacturerLabel = new javax.swing.JLabel();
-        itemUrlLabel = new javax.swing.JLabel();
-        itemDescriptionPane = new javax.swing.JScrollPane();
-        itemDescriptionTF = new javax.swing.JTextArea();
-        itemManufacturerTF = new javax.swing.JTextField();
-        itemUrlTF = new javax.swing.JTextField();
-        itemStockLabel = new javax.swing.JLabel();
-        itemStockTF = new javax.swing.JTextField();
-        submitButton = new javax.swing.JButton();
-        
-        itemBarcodeLabel.setText("Barcode");
-        itemBarcodeLabel.setPreferredSize(new java.awt.Dimension(100, 22));
-
-        itemBarcodeTF.setPreferredSize(new java.awt.Dimension(200, 22));
-
-        itemTitleLabel.setText("Title");
-        itemTitleLabel.setPreferredSize(new java.awt.Dimension(100, 22));
-
-        itemTitleTF.setPreferredSize(new java.awt.Dimension(200, 22));
-
-        itemDescriptionLabel.setText("Description");
-        itemDescriptionLabel.setPreferredSize(new java.awt.Dimension(100, 22));
-
-        itemManufacturerLabel.setText("Manufacturer");
-        itemManufacturerLabel.setPreferredSize(new java.awt.Dimension(100, 22));
-
-        itemUrlLabel.setText("URL");
-        itemUrlLabel.setPreferredSize(new java.awt.Dimension(100, 22));
-
-        itemDescriptionTF.setColumns(20);
-        itemDescriptionTF.setRows(5);
-        itemDescriptionTF.setLineWrap(true);
-        itemDescriptionPane.setViewportView(itemDescriptionTF);
-
-        itemManufacturerTF.setPreferredSize(new java.awt.Dimension(200, 22));
-
-        itemUrlTF.setPreferredSize(new java.awt.Dimension(200, 22));
-        
-        submitButton.setText("Submit");
-        submitButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                onSubmitButtonClick(evt);
-            }
-        });
-
-        itemStockLabel.setText("Number of Stock");
-        itemStockLabel.setPreferredSize(new java.awt.Dimension(100, 22));
-
-        itemStockTF.setPreferredSize(new java.awt.Dimension(200, 22));
-
-        javax.swing.GroupLayout itemFormLayout = new javax.swing.GroupLayout(itemForm);
-        itemForm.setLayout(itemFormLayout);
-        itemFormLayout.setHorizontalGroup(
-            itemFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(itemFormLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(itemFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(itemFormLayout.createSequentialGroup()
-                        .addComponent(itemBarcodeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(itemBarcodeTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(itemFormLayout.createSequentialGroup()
-                        .addComponent(itemTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(itemTitleTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(itemFormLayout.createSequentialGroup()
-                        .addComponent(itemDescriptionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(itemDescriptionPane, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(itemFormLayout.createSequentialGroup()
-                        .addComponent(itemManufacturerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(itemManufacturerTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(itemFormLayout.createSequentialGroup()
-                        .addComponent(itemUrlLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(itemUrlTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(itemFormLayout.createSequentialGroup()
-                        .addComponent(itemStockLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(itemFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(submitButton)
-                            .addComponent(itemStockTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(357, Short.MAX_VALUE))
-        );
-        itemFormLayout.setVerticalGroup(
-            itemFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(itemFormLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(itemFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(itemFormLayout.createSequentialGroup()
-                        .addGroup(itemFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(itemBarcodeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(itemBarcodeTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(itemFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(itemTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(itemTitleTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(itemDescriptionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(76, 76, 76))
-                    .addComponent(itemDescriptionPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(17, 17, 17)
-                .addGroup(itemFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(itemManufacturerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(itemManufacturerTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(itemFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(itemUrlLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(itemUrlTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(itemFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(itemStockLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(itemStockTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(submitButton)
-                .addContainerGap(265, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(itemForm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(itemForm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        pack();
-    }
     
-    private void onItemMenuClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onItemMenuClicked
+    private void onItemMenuClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onItemMenuClick
         // TODO add your handling code here:
-        Object[][] item = daftarItemCtl.searchItem();
-        
-        showItemList(item);
+        showItemList();
         state = showItem;
-    }//GEN-LAST:event_onItemMenuClicked
+    }//GEN-LAST:event_onItemMenuClick
 
-    private void onSearchButtonClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onSearchButtonClick
-        // TODO add your handling code here:
-        switch(state){
-            case showItem:
-                Object[][] item = daftarItemCtl.searchItem(searchBar.getText().toLowerCase());
-                showItemList(item);
-                break;
-            case showInvoice:
-                Object[][] invoice = daftarSPCtl.searchInvoice(searchBar.getText().toLowerCase());
-                showInvoiceList(invoice);
-                break;
-        }
-    }//GEN-LAST:event_onSearchButtonClick
-
-    private void onAddButtonClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onAddButtonClick
-        // TODO add your handling code here:
-        daftarItemCtl.showNewItemForm();
-    }//GEN-LAST:event_onAddButtonClick
-
-    private void onInvoiceMenuClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onInvoiceMenuClick
-        // TODO add your handling code here:
-        Object[][] invoices = daftarSPCtl.searchInvoice();
-        
-        showInvoiceList(invoices);
-        state = showInvoice;
-    }//GEN-LAST:event_onInvoiceMenuClick
-
-    private void onSubmitButtonClick(java.awt.event.MouseEvent evt){
-        Object[][] item = null;
-        switch(state){
-            case addItem:
-                item = daftarItemCtl.getCreateNewItemCtl().addItem(
-                    itemBarcodeTF.getText(),
-                    itemTitleTF.getText(),
-                    itemDescriptionTF.getText(),
-                    itemManufacturerTF.getText(),
-                    itemUrlTF.getText(),
-                    Integer.parseInt(itemStockTF.getText())
-                );
-                break;
-            case editItem:
-                item = daftarItemCtl.getUpdateItemCtl().updateItem(
-                    editedItemId,
-                    itemBarcodeTF.getText(),
-                    itemTitleTF.getText(),
-                    itemDescriptionTF.getText(),
-                    itemManufacturerTF.getText(),
-                    itemUrlTF.getText(),
-                    Integer.parseInt(itemStockTF.getText())
-                );
-                break;
-        }
-        
-        showItemList(item);
-        state = showItem;
+    public void showItemList(){
+        daftarItemCtl.searchItem();
     }
     
-    private void onEditButtonClick(java.awt.event.MouseEvent evt){
-        javax.swing.JButton jButton = (javax.swing.JButton)evt.getSource();
-        editedItemId = jButton.getName();
-        daftarItemCtl.showEditItemForm(jButton.getY() / 16);
-    }
-    
-    private void onViewButtonClick(java.awt.event.MouseEvent evt){
-        javax.swing.JButton jButton = (javax.swing.JButton)evt.getSource();
-        daftarSPCtl.showInvoiceDescription(jButton.getY() / 16);
-    }
-    
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addButton;
-    private javax.swing.JScrollPane buttonHolder;
-    private javax.swing.JScrollPane content;
-    private javax.swing.JTable contentList;
-    private javax.swing.JPanel header;
-    private javax.swing.JMenu invoiceMenu;
-    private javax.swing.JPanel itemForm;
-    private javax.swing.JMenu itemMenu;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JTextField searchBar;
-    private javax.swing.JButton searchButton;
-    // End of variables declaration//GEN-END:variables
-    
-    // Item Form
-    private javax.swing.JLabel itemBarcodeLabel;
-    private javax.swing.JTextField itemBarcodeTF;
-    private javax.swing.JLabel itemDescriptionLabel;
-    private javax.swing.JTextArea itemDescriptionTF;
-    private javax.swing.JLabel itemManufacturerLabel;
-    private javax.swing.JTextField itemManufacturerTF;
-    private javax.swing.JLabel itemTitleLabel;
-    private javax.swing.JTextField itemTitleTF;
-    private javax.swing.JLabel itemUrlLabel;
-    private javax.swing.JTextField itemUrlTF;
-    private javax.swing.JScrollPane itemDescriptionPane;
-    private javax.swing.JLabel itemStockLabel;
-    private javax.swing.JTextField itemStockTF;
-    private javax.swing.JButton submitButton;
-    
-    private javax.swing.JButton[] editButtons;
-    
-    public void setDaftarItemCtl(DaftarItemCtl daftarItemCtl){
-        this.daftarItemCtl = daftarItemCtl;
-        this.daftarItemCtl.setMainPage(this);
-    }
-    
-    public void setDaftarSPCtl(DaftarSPCtl daftarSPCtl){
-        this.daftarSPCtl = daftarSPCtl;
-        this.daftarSPCtl.setMainPage(this);
-    }
-    
-    public void showItemList(Object[][] item){
-        
-        contentList.setModel(new javax.swing.table.DefaultTableModel(
-            item,
-            new String [] {
-                "Id", "Title", "Manufacturer", "Number of Stock"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        content.setViewportView(contentList);
-        
-        
+    public void showItems(Object[][] item){
+        ItemList.show(item, content);
         buttonHolder.removeAll();
         editButtons = new javax.swing.JButton[item.length];
         for(int i=0; i<item.length; i++){
@@ -477,7 +177,6 @@ public class MainPage extends javax.swing.JFrame {
         
         if(state != showItem){
             addButton.setVisible(true);
-            itemForm.setVisible(false);
             header.setVisible(true);
             content.setVisible(true);
             buttonHolder.setVisible(true);
@@ -486,52 +185,71 @@ public class MainPage extends javax.swing.JFrame {
         buttonHolder.repaint();
     }
     
-    public void showInvoiceList(Object[][] invoice){
-        
-        contentList.setModel(new javax.swing.table.DefaultTableModel(
-            invoice,
-            new String [] {
-                "Invoice No.", "Po No.", "Sup. Name", "Order Date", "Delivery Date", "Status"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class,
-                java.lang.String.class, java.lang.Object.class, java.lang.Object.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
+    private void onSearchButtonClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onSearchButtonClick
+        // TODO add your handling code here:
+        searchKeyword();
+    }//GEN-LAST:event_onSearchButtonClick
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
+    private void searchKeyword(){
+        switch(state){
+            case showItem:
+                daftarItemCtl.searchItem(searchBar.getText().toLowerCase());
+                break;
+            case showInvoice:
+                daftarSPCtl.searchInvoice(searchBar.getText().toLowerCase());
+                break;
+            case showDeliveryNote:
+                daftarSJCtl.searchDeliveryNote(searchBar.getText().toLowerCase());
+                break;
+        }
+    }
+    
+    private void onAddButtonClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onAddButtonClick
+        // TODO add your handling code here:
+        showNewItemForm();
+    }//GEN-LAST:event_onAddButtonClick
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        content.setViewportView(contentList);
+    private void showNewItemForm(){
+        daftarItemCtl.openNewItemForm();
+    }
+    private void onInvoiceMenuClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onInvoiceMenuClick
+        // TODO add your handling code here:
+        showInvoiceList();
         
+        state = showInvoice;
+    }//GEN-LAST:event_onInvoiceMenuClick
+
+    private void onDNMenuClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onDNMenuClick
+        // TODO add your handling code here:
+        showDNList();
         
+        state = showDeliveryNote;
+    }//GEN-LAST:event_onDNMenuClick
+
+    private void showDNList(){
+        daftarSJCtl.searchDeliveryNote();
+    }
+    
+    public void showDeliveryNote(Object[][] deliveryNote){
+        InvoiceList.show(deliveryNote, content);
         buttonHolder.removeAll();
-        editButtons = new javax.swing.JButton[invoice.length];
-        for(int i=0; i<invoice.length; i++){
+        editButtons = new javax.swing.JButton[deliveryNote.length];
+        for(int i=0; i<deliveryNote.length; i++){
             editButtons[i] = new javax.swing.JButton("View");
             editButtons[i].setSize(80,15);
             editButtons[i].setLocation(0, 16 * i);
-            editButtons[i].setName(invoice[i][0].toString());
+            editButtons[i].setName(deliveryNote[i][1].toString());
             editButtons[i].addMouseListener(new java.awt.event.MouseAdapter() {
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
                     onViewButtonClick(evt);
                 }
             });
+            
             buttonHolder.add(editButtons[i]);
         }
         
-        
-        if(state != showInvoice){
+        if(state != showDeliveryNote){
             addButton.setVisible(false);
-            itemForm.setVisible(false);
             header.setVisible(true);
             content.setVisible(true);
             buttonHolder.setVisible(true);
@@ -540,63 +258,106 @@ public class MainPage extends javax.swing.JFrame {
         buttonHolder.repaint();
     }
     
-    public void setItemFormTF(){
-        itemBarcodeTF.setText("");
-        itemTitleTF.setText("");
-        itemDescriptionTF.setText("");
-        itemManufacturerTF.setText("");
-        itemUrlTF.setText("");
-        itemStockTF.setText("");
+    private void showInvoiceList(){
+        daftarSPCtl.searchInvoice();
+    }
+    
+    public void showInvoice(Object[][] deliveryNote){
+        InvoiceList.show(deliveryNote, content);
+        buttonHolder.removeAll();
+        editButtons = new javax.swing.JButton[deliveryNote.length];
+        for(int i=0; i<deliveryNote.length; i++){
+            editButtons[i] = new javax.swing.JButton("View");
+            editButtons[i].setSize(80,15);
+            editButtons[i].setLocation(0, 16 * i);
+            editButtons[i].setName(deliveryNote[i][0].toString());
+            editButtons[i].addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    onViewButtonClick(evt);
+                }
+            });
+            
+            buttonHolder.add(editButtons[i]);
+        }
         
-        submitButton.setText("Submit");
-    }
-    
-    public void setItemFormTF(String barcode, String title, String description, String manufacturer, String url, int numberOfStock){
-        itemBarcodeTF.setText(barcode);
-        itemTitleTF.setText(title);
-        itemDescriptionTF.setText(description);
-        itemManufacturerTF.setText(manufacturer);
-        itemUrlTF.setText(url);
-        itemStockTF.setText(Integer.toString(numberOfStock));
+        if(state != showInvoice){
+            addButton.setVisible(false);
+            header.setVisible(true);
+            content.setVisible(true);
+            buttonHolder.setVisible(true);
+        }
         
-        submitButton.setText("Update");
+        buttonHolder.repaint();
     }
     
-    public void openNewItemForm(){
-        header.setVisible(false);
-        content.setVisible(false);
-        buttonHolder.setVisible(false);
-        itemForm.setVisible(true);
-        
-        setStateToAddItem();
+    private void onEditButtonClick(java.awt.event.MouseEvent evt){
+        javax.swing.JButton jButton = (javax.swing.JButton)evt.getSource();
+        editedId = jButton.getName();
+        editedCursor = jButton.getY() / 16;
+        showEditItemForm();
     }
     
-    public void openEditItemForm(){
-        header.setVisible(false);
-        content.setVisible(false);
-        buttonHolder.setVisible(false);
-        itemForm.setVisible(true);
-        
-        setStateToEditItem();
+    private void showEditItemForm(){
+        daftarItemCtl.openEditItemForm();
     }
     
-    public void openInvoiceDescription(){
-        header.setVisible(false);
-        content.setVisible(false);
-        buttonHolder.setVisible(false);
-        
-        setStateToViewInvoice();
+    private void onViewButtonClick(java.awt.event.MouseEvent evt){
+        javax.swing.JButton jButton = (javax.swing.JButton)evt.getSource();
+        editedId = jButton.getName();
+        editedCursor = jButton.getY() / 16;
+        switch(state){
+            case showInvoice:
+                showInvoiceDescription();
+                break;
+            case showDeliveryNote:
+                showDNDescription();
+                break;
+        }
     }
     
-    public void setStateToAddItem(){
-        state = addItem;
+    private void showInvoiceDescription(){
+        daftarSPCtl.openInvoiceDescription();
     }
     
-    public void setStateToEditItem(){
-        state = editItem;
+    private void showDNDescription(){
+        daftarSJCtl.openDNDescription();
     }
     
-    public void setStateToViewInvoice(){
-        state = viewInvoice;
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addButton;
+    private javax.swing.JScrollPane buttonHolder;
+    private javax.swing.JScrollPane content;
+    private javax.swing.JMenu deliveryNoteMenu;
+    private javax.swing.JPanel header;
+    private javax.swing.JMenu invoiceMenu;
+    private javax.swing.JMenu itemMenu;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JTextField searchBar;
+    private javax.swing.JButton searchButton;
+    // End of variables declaration//GEN-END:variables
+    
+    private javax.swing.JButton[] editButtons;
+
+    public String getEditedId() {
+        return editedId;
+    }
+
+    public int getEditedCursor() {
+        return editedCursor;
+    }
+    
+    public void setDaftarItemCtl(DaftarItemCtl daftarItemCtl){
+        this.daftarItemCtl = daftarItemCtl;
+        this.daftarItemCtl.setMainPage(this);
+    }
+    
+    public void setDaftarSPCtl(DaftarSPCtl daftarSPCtl){
+        this.daftarSPCtl = daftarSPCtl;
+        this.daftarSPCtl.setMainPage(this);
+    }
+
+    public void setDaftarSJCtl(DaftarSJCtl daftarSJCtl) {
+        this.daftarSJCtl = daftarSJCtl;
+        this.daftarSJCtl.setMainPage(this);
     }
 }

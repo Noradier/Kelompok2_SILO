@@ -6,18 +6,34 @@
 package com.silo.controller;
 
 import com.silo.db.DBHandler;
-import com.silo.MainPage;
+import com.silo.NewItemForm;
 import com.silo.db.Item;
 
 public class CreateNewItemCtl {
     private DBHandler db;
+    private DaftarItemCtl daftarItemCtl;
+    private NewItemForm newItemForm;
 
     public CreateNewItemCtl(DBHandler db) {
         this.db = db;
     }
+
+    public void setDaftarItemCtl(DaftarItemCtl daftarItemCtl) {
+        this.daftarItemCtl = daftarItemCtl;
+    }
     
-    public Object[][] addItem(String barcode, String title, String description, String manufacturer, String url, int numberOfStock){
-        db.createItem(barcode, title, description, manufacturer, url, numberOfStock);
+    public void setNewItemForm(NewItemForm newItemForm) {
+        this.newItemForm = newItemForm;
+    }
+    
+    public void addItem(Item newItem){
+        db.createItem(
+                newItem.getBarcode(),
+                newItem.getTitle(),
+                newItem.getDescription(),
+                newItem.getManufacturer(),
+                newItem.getUrl(),
+                newItem.getNumberOfStock());
         
         Item[] items = db.getAllItem();
         
@@ -32,11 +48,15 @@ public class CreateNewItemCtl {
             item[i][3] = items[i].getNumberOfStock();
         }
         
-        return item;
+        openItem(item);
+        newItemForm.setVisible(false);
     }
     
-    public void openNewItemForm(MainPage mainPage){
-        mainPage.setItemFormTF();
-        mainPage.openNewItemForm();
+    public void show(){
+        newItemForm.setVisible(true);
+    }
+    
+    public void openItem(Object[][] item){
+        daftarItemCtl.openItemList(item);
     }
 }

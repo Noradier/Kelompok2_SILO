@@ -15,6 +15,7 @@ public class DaftarItemCtl {
     private CreateNewItemCtl createNewItemCtl;
     private UpdateItemCtl updateItemCtl;
     private MainPage mainPage;
+    
     static Item[] items;
     
     public DaftarItemCtl(DBHandler db){
@@ -27,28 +28,40 @@ public class DaftarItemCtl {
         return createNewItemCtl;
     }
     
-    public  UpdateItemCtl getUpdateItemCtl(){
+    public UpdateItemCtl getUpdateItemCtl(){
         return updateItemCtl;
+    }
+
+    public SearchItemCtl getSearchItemCtl() {
+        return searchItemCtl;
+    }
+    
+    public MainPage getMainPage(){
+        return mainPage;
     }
     
     public void setMainPage(MainPage mainPage){
         this.mainPage = mainPage;
     }
     
-    public Object[][] searchItem(){
-        return searchItemCtl.searchAllItem();
+    public void searchItem(){
+        searchItemCtl.searchAllItem();
     }
     
-    public Object[][] searchItem(String keyword){
-        return searchItemCtl.searchItem(keyword);
+    public void openItemList(Object[][] item){
+        mainPage.showItems(item);
     }
     
-    public void showNewItemForm(){
-        createNewItemCtl.openNewItemForm(mainPage);
+    public void searchItem(String keyword){
+        searchItemCtl.searchItem(keyword);
     }
     
-    public void showEditItemForm(int i){
-        updateItemCtl.openEditItemForm(mainPage, i);
+    public void openNewItemForm(){
+        createNewItemCtl.show();
+    }
+    
+    public void openEditItemForm(){
+        updateItemCtl.show();
     }
     
 }
