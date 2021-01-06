@@ -51,6 +51,32 @@ public class Item {
         return numberOfStock;
     }
 
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setNumberOfStock(int numberOfStock) {
+        this.numberOfStock = numberOfStock;
+    }
+
+    
+    
     @Override
     public String toString() {
         return "Item{" + "id=" + id + ", barcode=" + barcode + ", title=" + title + ", description=" + description + ", manufacturer=" + manufacturer + ", url=" + url + ", numberOfStock=" + numberOfStock + '}';

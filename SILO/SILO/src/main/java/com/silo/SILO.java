@@ -10,16 +10,22 @@ import com.silo.controller.DaftarItemCtl;
 
 public class SILO {
     
+    static DBHandler db;
+    static DaftarItemCtl daftarItemCtl;
+    static MainPage mainPage;
+    
     public static void main(String[] args){
-        DBHandler db = new DBHandler();
-        DaftarItemCtl daftarItemCtl = new DaftarItemCtl(db);
+        db = new DBHandler();
+        daftarItemCtl = new DaftarItemCtl(db);
         
         java.awt.EventQueue.invokeLater(new Runnable(){
             public void run(){
-                MainPage mainPage = new MainPage();
+                mainPage = new MainPage();
                 mainPage.setDaftarItemCtl(daftarItemCtl);
                 mainPage.setVisible(true);
             }
         });
+        
+        daftarItemCtl.setMainPage(mainPage);
     }
 }
