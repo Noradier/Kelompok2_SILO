@@ -1,0 +1,6 @@
+FM001/null/Pumpkin/null/Farmer/null/12
+FM002/null/Melon/null/Farmer/null/12
+FM003/null/Bread/null/Farmer/null/16
+FM004/null/White Wool/null/Shepherd/null/16
+FM005/null/White Carpet/null/Shepherd/null/16
+IT006/4/3/2/1/12/12

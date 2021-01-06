@@ -5,23 +5,66 @@
  */
 package com.silo.db;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 public class DBHandler {
     private List<Item> items;
+    private List<Invoice> invoices;
+    private SimpleDateFormat dateFormat;
     
     public DBHandler(){
+        dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         initItem();
+        initInvoice();
     }
     
     public void initItem(){
         items = new ArrayList<Item>();
-        items.add(new Item("FM001", null, "Pumpkin", null, "Farmer", null, 12));
-        items.add(new Item("FM002", null, "Melon", null, "Farmer", null, 12));
-        items.add(new Item("FM003", null, "Bread", null, "Farmer", null, 16));
-        items.add(new Item("FM004", null, "White Wool", null, "Shepherd", null, 16));
-        items.add(new Item("FM005", null, "White Carpet", null, "Shepherd", null, 16));
+        
+        try{
+            File itemDb = new File("ItemDB.txt");
+            Scanner itemDbReader = new Scanner(itemDb);
+            while(itemDbReader.hasNextLine()){
+                String data = itemDbReader.nextLine();
+                String[] str = data.split("/");
+                items.add(new Item(str[0], str[1], str[2], str[3], str[4], str[5], Integer.parseInt(str[6])));
+            }
+        } catch(FileNotFoundException e){
+            
+        }
+    }
+    
+    public void initInvoice(){
+        invoices = new ArrayList<Invoice>();
+        
+        try{
+            File invoiceDb = new File("InvoiceDB.txt");
+            Scanner itemDbReader = new Scanner(invoiceDb);
+            while(itemDbReader.hasNextLine()){
+                String data = itemDbReader.nextLine();
+                String[] str = data.split("/");
+                Date orderDate = null, deliveryDate = null;
+                try{
+                    orderDate = dateFormat.parse(str[4]);
+                    deliveryDate = dateFormat.parse(str[5]);
+                } catch(ParseException e){
+                    
+                }
+                
+                invoices.add(new Invoice(str[0], str[1], str[2], str[3], orderDate, deliveryDate));
+            }
+        } catch(FileNotFoundException e){
+            
+        }
     }
     
     public Item[] getAllItem(){
@@ -51,6 +94,7 @@ public class DBHandler {
     
     public void createItem(String barcode, String title, String description, String manufacturer, String url, int numberOfStock){
         items.add(new Item(String.format("IT%03d", items.size() + 1), barcode, title, description, manufacturer, url, numberOfStock));
+        saveItemIntoDB();
     }
     
     public void updateItem(String id, String barcode, String title, String description, String manufacturer, String url, int numberOfStock){
@@ -66,6 +110,88 @@ public class DBHandler {
                 
                 break;
             }
+        }
+        
+        saveItemIntoDB();
+    }
+    
+    public void saveItemIntoDB(){
+        try{
+            FileWriter itemDbWriter = new FileWriter("ItemDB.txt");
+            
+            for(int i=0; i<items.size(); i++){
+                Item temp = items.get(i);
+                itemDbWriter.write(
+                    temp.getId() + "/" +
+                            temp.getBarcode() + "/" +
+                            temp.getTitle() + "/" +
+                            temp.getDescription() + "/" +
+                            temp.getManufacturer() + "/" +
+                            temp.getUrl() + "/" +
+                            Integer.toString(temp.getNumberOfStock()) + "\n"
+                );
+            }
+            itemDbWriter.close();
+        } catch(IOException e){
+            System.out.println("An error occurred.");
+        }
+    }
+    
+    public Invoice[] getAllInvoice(){
+        Invoice[] data = new Invoice[invoices.size()];
+        for(int i=0; i<invoices.size(); i++)
+            data[i] = invoices.get(i);
+        
+        return data;
+    }
+    
+    public Invoice[] getInvoice(String keyword){
+        List<Invoice> matchedInvoice = new ArrayList<Invoice>();
+        for(int i=0; i<invoices.size(); i++){
+            Invoice temp = invoices.get(i);
+            if(temp.getSupplierName().toLowerCase().contains(keyword) ||
+                    temp.getStatus().toLowerCase().contains(keyword))
+                matchedInvoice.add(temp);
+        }
+        
+        Invoice[] data = new Invoice[matchedInvoice.size()];
+        for(int i=0; i<matchedInvoice.size(); i++)
+            data[i] = matchedInvoice.get(i);
+        
+        return data;
+    }
+    
+    public void setInvoiceStatus(String invoiceNumber, String status){
+        for(int i=0; i<invoices.size(); i++){
+            Invoice temp = invoices.get(i);
+            if(temp.getInvoiceNumber().equals(invoiceNumber)){
+                temp.setStatus(status);
+                
+                break;
+            }
+        }
+        
+        saveInvoiceIntoDB();
+    }
+    
+    public void saveInvoiceIntoDB(){
+        try{
+            FileWriter invoiceDbWriter = new FileWriter("InvoiceDB.txt");
+            
+            for(int i=0; i<invoices.size(); i++){
+                Invoice temp = invoices.get(i);
+                invoiceDbWriter.write(
+                    temp.getInvoiceNumber() + "/" +
+                            temp.getPoNumber() + "/" +
+                            temp.getSupplierName() + "/" +
+                            temp.getStatus() + "/" +
+                            temp.getOrderDateString() + "/" +
+                            temp.getDeliveryDateString() + "\n"
+                );
+            }
+            invoiceDbWriter.close();
+        } catch(IOException e){
+            System.out.println("An error occurred.");
         }
     }
 }

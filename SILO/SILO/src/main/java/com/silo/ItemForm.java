@@ -163,7 +163,7 @@ public class ItemForm extends javax.swing.JFrame {
                         .addGroup(itemFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(itemIdLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(itemBarcodeTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(357, Short.MAX_VALUE))
+                .addContainerGap(316, Short.MAX_VALUE))
         );
         itemFormLayout.setVerticalGroup(
             itemFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
