@@ -9,6 +9,7 @@ import com.silo.db.DBHandler;
 import com.silo.controller.DaftarItemCtl;
 import com.silo.controller.DaftarSJCtl;
 import com.silo.controller.DaftarSPCtl;
+import com.silo.controller.SuratJalanCtl;
 
 public class SILO {
     
@@ -16,11 +17,17 @@ public class SILO {
     static DaftarItemCtl daftarItemCtl;
     static DaftarSPCtl daftarSPCtl;
     static DaftarSJCtl daftarSJCtl;
+    static SuratJalanCtl suratJalanCtl;
     static MainPage mainPage;
     static NewItemForm newItemForm;
     static EditItemForm editItemForm;
     static InvoiceDescription invoiceDescription;
     static DeliveryNoteDesc deliveryNoteDesc;
+    static DeliveryNoteForm deliveryNoteForm;
+    static MessageBox messageBox;
+    static DescriptionOfNewDeliveryNote descriptionOfNewDeliveryNote;
+    static DialogBox printDialogBox;
+    static SendingForm sendingForm;
     
     public static void main(String[] args){
         db = new DBHandler();
@@ -34,6 +41,9 @@ public class SILO {
         daftarSJCtl = new DaftarSJCtl(db);
         daftarSJCtl.getSearchDNCtl().setDaftarSJCtl(daftarSJCtl);
         daftarSJCtl.getDeliveringOrderCtl().setDaftarSJCtl(daftarSJCtl);
+        suratJalanCtl = new SuratJalanCtl(db);
+        suratJalanCtl.getCreateDNCtl().setSuratJalanCtl(suratJalanCtl);
+        suratJalanCtl.getSendSoftcopyCtl().setSuratJalanCtl(suratJalanCtl);
         
         java.awt.EventQueue.invokeLater(new Runnable(){
             public void run(){
@@ -41,6 +51,7 @@ public class SILO {
                 mainPage.setDaftarItemCtl(daftarItemCtl);
                 mainPage.setDaftarSPCtl(daftarSPCtl);
                 mainPage.setDaftarSJCtl(daftarSJCtl);
+                mainPage.setSuratJalanCtl(suratJalanCtl);
                 mainPage.setVisible(true);
                 
                 newItemForm = new NewItemForm();
@@ -58,6 +69,29 @@ public class SILO {
                 deliveryNoteDesc = new DeliveryNoteDesc();
                 deliveryNoteDesc.setDeliveringOrderCtl(daftarSJCtl.getDeliveringOrderCtl());
                 deliveryNoteDesc.setVisible(false);
+                
+                deliveryNoteForm = new DeliveryNoteForm();
+                mainPage.setDeliveryNoteForm(deliveryNoteForm);
+                deliveryNoteForm.setCreateDNCtl(suratJalanCtl.getCreateDNCtl());
+                deliveryNoteForm.setVisible(false);
+                
+                messageBox = new MessageBox();
+                messageBox.setCreateDNCtl(suratJalanCtl.getCreateDNCtl());
+                messageBox.setDeliveryNoteForm(deliveryNoteForm);
+                messageBox.setVisible(false);
+                
+                descriptionOfNewDeliveryNote = new DescriptionOfNewDeliveryNote();
+                descriptionOfNewDeliveryNote.setCreateDNCtl(suratJalanCtl.getCreateDNCtl());
+                descriptionOfNewDeliveryNote.setSuratJalanCtl(suratJalanCtl);
+                descriptionOfNewDeliveryNote.setVisible(false);
+                
+                printDialogBox = new DialogBox();
+                printDialogBox.setPrintHardcopyCtl(suratJalanCtl.getPrintHardcopyCtl());
+                printDialogBox.setVisible(false);
+                
+                sendingForm = new SendingForm();
+                sendingForm.setSendSoftcopyCtl(suratJalanCtl.getSendSoftcopyCtl());
+                sendingForm.setVisible(false);
             }
         });
     }

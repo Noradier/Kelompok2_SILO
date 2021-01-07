@@ -52,6 +52,13 @@ public class DeliveryNote {
     public void setStatus(String status) {
         this.status = status;
     }
-    
+
+    public Date getOrderDate() {
+        return orderDate;
+    }
+
+    public Date getDeliveryDate() {
+        return deliveryDate;
+    }
     
 }

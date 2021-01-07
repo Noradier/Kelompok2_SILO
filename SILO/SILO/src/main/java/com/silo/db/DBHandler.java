@@ -286,4 +286,30 @@ public class DBHandler {
             System.out.println("An error occurred.");
         }
     }
+    
+    public void createDeliveryNote(String invoiceNumber, String deliveryNoteNumber, String customerName, String status, Date orderDate, Date deliveryDate){
+        deliveryNotes.add(new DeliveryNote(invoiceNumber, deliveryNoteNumber, customerName, status, orderDate, deliveryDate));
+        saveDNIntoDB();
+    }
+    
+    public void saveDNIntoDB(){
+        try{
+            FileWriter deliveryNoteDbWriter = new FileWriter("DeliveryNoteDB.txt");
+            
+            for(int i=0; i<deliveryNotes.size(); i++){
+                DeliveryNote temp = deliveryNotes.get(i);
+                deliveryNoteDbWriter.write(
+                    temp.getInvoiceNumber() + "/" +
+                            temp.getDeliveryNoteNumber() + "/" +
+                            temp.getCustomerName() + "/" +
+                            temp.getStatus() + "/" +
+                            temp.getOrderDateString() + "/" +
+                            temp.getDeliveryDateString() + "\n"
+                );
+            }
+            deliveryNoteDbWriter.close();
+        } catch(IOException e){
+            System.out.println("An error occurred.");
+        }
+    }
 }

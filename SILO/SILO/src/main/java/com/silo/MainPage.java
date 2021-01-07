@@ -8,6 +8,7 @@ package com.silo;
 import com.silo.controller.DaftarItemCtl;
 import com.silo.controller.DaftarSJCtl;
 import com.silo.controller.DaftarSPCtl;
+import com.silo.controller.SuratJalanCtl;
 
 public class MainPage extends javax.swing.JFrame {
     
@@ -20,6 +21,9 @@ public class MainPage extends javax.swing.JFrame {
     DaftarItemCtl daftarItemCtl;
     DaftarSPCtl daftarSPCtl;
     DaftarSJCtl daftarSJCtl;
+    SuratJalanCtl suratJalanCtl;
+    
+    DeliveryNoteForm deliveryNoteForm;
     
     public MainPage() {
         initComponents();
@@ -49,6 +53,7 @@ public class MainPage extends javax.swing.JFrame {
         itemMenu = new javax.swing.JMenu();
         invoiceMenu = new javax.swing.JMenu();
         deliveryNoteMenu = new javax.swing.JMenu();
+        createDeliveryNoteMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setSize(new java.awt.Dimension(800, 600));
@@ -118,6 +123,14 @@ public class MainPage extends javax.swing.JFrame {
             }
         });
         jMenuBar1.add(deliveryNoteMenu);
+
+        createDeliveryNoteMenu.setText("Create Delivery Note");
+        createDeliveryNoteMenu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                onCreateDNMenuClick(evt);
+            }
+        });
+        jMenuBar1.add(createDeliveryNoteMenu);
 
         setJMenuBar(jMenuBar1);
 
@@ -226,6 +239,20 @@ public class MainPage extends javax.swing.JFrame {
         state = showDeliveryNote;
     }//GEN-LAST:event_onDNMenuClick
 
+    private void onCreateDNMenuClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onCreateDNMenuClick
+        // TODO add your handling code here:
+        showDNForm();
+    }//GEN-LAST:event_onCreateDNMenuClick
+
+    private void showDNForm(){
+        suratJalanCtl.openDNForm();
+    }
+    
+    public void showForm(){
+        deliveryNoteForm.setTextField();
+        deliveryNoteForm.setVisible(true);
+    }
+    
     private void showDNList(){
         daftarSJCtl.searchDeliveryNote();
     }
@@ -327,6 +354,7 @@ public class MainPage extends javax.swing.JFrame {
     private javax.swing.JButton addButton;
     private javax.swing.JScrollPane buttonHolder;
     private javax.swing.JScrollPane content;
+    private javax.swing.JMenu createDeliveryNoteMenu;
     private javax.swing.JMenu deliveryNoteMenu;
     private javax.swing.JPanel header;
     private javax.swing.JMenu invoiceMenu;
@@ -359,5 +387,14 @@ public class MainPage extends javax.swing.JFrame {
     public void setDaftarSJCtl(DaftarSJCtl daftarSJCtl) {
         this.daftarSJCtl = daftarSJCtl;
         this.daftarSJCtl.setMainPage(this);
+    }
+
+    public void setSuratJalanCtl(SuratJalanCtl suratJalanCtl) {
+        this.suratJalanCtl = suratJalanCtl;
+        this.suratJalanCtl.setMainPage(this);
+    }
+
+    public void setDeliveryNoteForm(DeliveryNoteForm deliveryNoteForm) {
+        this.deliveryNoteForm = deliveryNoteForm;
     }
 }
