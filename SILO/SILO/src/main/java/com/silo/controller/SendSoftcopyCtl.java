@@ -9,7 +9,6 @@ import com.silo.Alert;
 import com.silo.SendingForm;
 import java.awt.EventQueue;
 import java.awt.event.ActionListener;
-import javafx.event.ActionEvent;
 import javax.swing.Timer;
 
 public class SendSoftcopyCtl {
