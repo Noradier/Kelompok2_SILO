@@ -5,18 +5,19 @@
  */
 package com.silo;
 
-import com.silo.controller.PrintHardcopyCtl;
+import com.silo.controller.CreateNewItemCtl;
 
-/**
- *
- * @author user
- */
 public class DialogBox extends javax.swing.JFrame {
 
-    private PrintHardcopyCtl printHardcopyCtl;
+    /**
+     * Creates new form DialogBox
+     */
+    
+    private CreateNewItemCtl createNewItemCtl;
     
     public DialogBox() {
         initComponents();
+        
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
     }
 
@@ -29,20 +30,17 @@ public class DialogBox extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        okButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jRadioButton1.setText("Print Normal");
+        jLabel1.setText("Failed to create new item. There is missing attribute(s).");
 
-        jRadioButton2.setText("Print With Detail");
-
-        okButton.setText("OK");
-        okButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        cancelButton.setText("Cancel");
+        cancelButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                onOKButtonClick(evt);
+                onCancelButtonClick(evt);
             }
         });
 
@@ -51,48 +49,41 @@ public class DialogBox extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton2))
-                .addContainerGap(273, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(155, 155, 155)
+                        .addComponent(cancelButton)))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jRadioButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 207, Short.MAX_VALUE)
-                .addComponent(okButton)
-                .addContainerGap())
+                .addGap(38, 38, 38)
+                .addComponent(jLabel1)
+                .addGap(35, 35, 35)
+                .addComponent(cancelButton)
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void onOKButtonClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onOKButtonClick
+    private void onCancelButtonClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onCancelButtonClick
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_onOKButtonClick
-
-    private void printHardcopy(){
-        printHardcopyCtl.print();
-    }
+        createNewItemCtl.close();
+        setVisible(false);
+    }//GEN-LAST:event_onCancelButtonClick
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JButton okButton;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 
-    public void setPrintHardcopyCtl(PrintHardcopyCtl printHardcopyCtl) {
-        this.printHardcopyCtl = printHardcopyCtl;
-        this.printHardcopyCtl.setPrint(this);
+    public void setCreateNewItemCtl(CreateNewItemCtl createNewItemCtl) {
+        this.createNewItemCtl = createNewItemCtl;
+        this.createNewItemCtl.setExceptionDialogBox(this);
     }
 }

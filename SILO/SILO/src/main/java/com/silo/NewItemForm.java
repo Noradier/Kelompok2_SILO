@@ -178,6 +178,13 @@ public class NewItemForm extends javax.swing.JFrame {
     }//GEN-LAST:event_onSubmitButtonClick
 
     private void createItem(){
+        int numberOfStock = 0;
+        
+        if(stockTF.getText().equals("") || stockTF.getText() == null)
+            numberOfStock = 0;
+        else
+            numberOfStock = Integer.parseInt(stockTF.getText());
+                
         createNewItemCtl.addItem(new Item(
                 null,
                 barcodeTF.getText(),
@@ -185,7 +192,7 @@ public class NewItemForm extends javax.swing.JFrame {
                 descriptionTF.getText(),
                 manufacturerTF.getText(),
                 urlTF.getText(),
-                Integer.parseInt(stockTF.getText())
+                numberOfStock
         ));
     }
     

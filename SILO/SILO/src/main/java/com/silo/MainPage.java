@@ -12,9 +12,8 @@ import com.silo.controller.SuratJalanCtl;
 
 public class MainPage extends javax.swing.JFrame {
     
-    private int state;
-    private static final int
-            showItem = 1, showInvoice = 2, showDeliveryNote = 3;
+    private IMainPageState state;
+    
     private String editedId;
     private int editedCursor;
     
@@ -28,7 +27,7 @@ public class MainPage extends javax.swing.JFrame {
     public MainPage() {
         initComponents();
         
-        state = 0;
+        state = new ShowNothing(this);
         header.setVisible(false);
         content.setVisible(false);
         buttonHolder.setVisible(false);
@@ -163,7 +162,7 @@ public class MainPage extends javax.swing.JFrame {
     private void onItemMenuClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onItemMenuClick
         // TODO add your handling code here:
         showItemList();
-        state = showItem;
+        state.showItem();
     }//GEN-LAST:event_onItemMenuClick
 
     public void showItemList(){
@@ -188,7 +187,7 @@ public class MainPage extends javax.swing.JFrame {
             buttonHolder.add(editButtons[i]);
         }
         
-        if(state != showItem){
+        if(state instanceof ShowItem){
             addButton.setVisible(true);
             header.setVisible(true);
             content.setVisible(true);
@@ -204,17 +203,14 @@ public class MainPage extends javax.swing.JFrame {
     }//GEN-LAST:event_onSearchButtonClick
 
     private void searchKeyword(){
-        switch(state){
-            case showItem:
-                daftarItemCtl.searchItem(searchBar.getText().toLowerCase());
-                break;
-            case showInvoice:
-                daftarSPCtl.searchInvoice(searchBar.getText().toLowerCase());
-                break;
-            case showDeliveryNote:
-                daftarSJCtl.searchDeliveryNote(searchBar.getText().toLowerCase());
-                break;
-        }
+        if(state instanceof ShowItem)
+            daftarItemCtl.searchItem(searchBar.getText().toLowerCase());
+        
+        if(state instanceof ShowInvoice)
+            daftarSPCtl.searchInvoice(searchBar.getText().toLowerCase());
+        
+        if(state instanceof ShowDeliveryNote)
+            daftarSJCtl.searchDeliveryNote(searchBar.getText().toLowerCase());
     }
     
     private void onAddButtonClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onAddButtonClick
@@ -229,14 +225,14 @@ public class MainPage extends javax.swing.JFrame {
         // TODO add your handling code here:
         showInvoiceList();
         
-        state = showInvoice;
+        state.showInvoice();
     }//GEN-LAST:event_onInvoiceMenuClick
 
     private void onDNMenuClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onDNMenuClick
         // TODO add your handling code here:
         showDNList();
         
-        state = showDeliveryNote;
+        state.showDeliveryNote();
     }//GEN-LAST:event_onDNMenuClick
 
     private void onCreateDNMenuClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onCreateDNMenuClick
@@ -275,7 +271,7 @@ public class MainPage extends javax.swing.JFrame {
             buttonHolder.add(editButtons[i]);
         }
         
-        if(state != showDeliveryNote){
+        if(state instanceof ShowDeliveryNote){
             addButton.setVisible(false);
             header.setVisible(true);
             content.setVisible(true);
@@ -307,7 +303,7 @@ public class MainPage extends javax.swing.JFrame {
             buttonHolder.add(editButtons[i]);
         }
         
-        if(state != showInvoice){
+        if(state instanceof ShowInvoice){
             addButton.setVisible(false);
             header.setVisible(true);
             content.setVisible(true);
@@ -332,14 +328,12 @@ public class MainPage extends javax.swing.JFrame {
         javax.swing.JButton jButton = (javax.swing.JButton)evt.getSource();
         editedId = jButton.getName();
         editedCursor = jButton.getY() / 16;
-        switch(state){
-            case showInvoice:
-                showInvoiceDescription();
-                break;
-            case showDeliveryNote:
-                showDNDescription();
-                break;
-        }
+        
+        if(state instanceof ShowInvoice)
+            showInvoiceDescription();
+        
+        if(state instanceof ShowDeliveryNote)
+            showDNDescription();
     }
     
     private void showInvoiceDescription(){
@@ -396,5 +390,9 @@ public class MainPage extends javax.swing.JFrame {
 
     public void setDeliveryNoteForm(DeliveryNoteForm deliveryNoteForm) {
         this.deliveryNoteForm = deliveryNoteForm;
+    }
+
+    public void setState(IMainPageState currentState){
+        state = currentState;
     }
 }

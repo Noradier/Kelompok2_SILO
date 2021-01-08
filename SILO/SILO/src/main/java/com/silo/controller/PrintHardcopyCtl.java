@@ -5,12 +5,12 @@
  */
 package com.silo.controller;
 
-import com.silo.DialogBox;
+import com.silo.PrintDialogBox;
 
 public class PrintHardcopyCtl {
     
     private SuratJalanCtl suratJalanCtl;
-    private DialogBox print;
+    private PrintDialogBox printDialogBox;
 
     public PrintHardcopyCtl() {
     }
@@ -19,12 +19,12 @@ public class PrintHardcopyCtl {
         this.suratJalanCtl = suratJalanCtl;
     }
 
-    public void setPrint(DialogBox print) {
-        this.print = print;
+    public void setPrintDialogBox(PrintDialogBox print) {
+        this.printDialogBox = print;
     }
     
     public void show(){
-        print.setVisible(true);
+        printDialogBox.setVisible(true);
     }
     
     public void print(){

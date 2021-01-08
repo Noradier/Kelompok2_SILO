@@ -26,8 +26,9 @@ public class SILO {
     static DeliveryNoteForm deliveryNoteForm;
     static MessageBox messageBox;
     static DescriptionOfNewDeliveryNote descriptionOfNewDeliveryNote;
-    static DialogBox printDialogBox;
+    static PrintDialogBox printDialogBox;
     static SendingForm sendingForm;
+    static DialogBox createNewItemExceptionDialogBox;
     
     public static void main(String[] args){
         db = new DBHandler();
@@ -85,13 +86,17 @@ public class SILO {
                 descriptionOfNewDeliveryNote.setSuratJalanCtl(suratJalanCtl);
                 descriptionOfNewDeliveryNote.setVisible(false);
                 
-                printDialogBox = new DialogBox();
+                printDialogBox = new PrintDialogBox();
                 printDialogBox.setPrintHardcopyCtl(suratJalanCtl.getPrintHardcopyCtl());
                 printDialogBox.setVisible(false);
                 
                 sendingForm = new SendingForm();
                 sendingForm.setSendSoftcopyCtl(suratJalanCtl.getSendSoftcopyCtl());
                 sendingForm.setVisible(false);
+                
+                createNewItemExceptionDialogBox = new DialogBox();
+                createNewItemExceptionDialogBox.setCreateNewItemCtl(daftarItemCtl.getCreateNewItemCtl());
+                createNewItemExceptionDialogBox.setVisible(false);
             }
         });
     }
