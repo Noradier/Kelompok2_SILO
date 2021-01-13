@@ -161,8 +161,8 @@ public class MainPage extends javax.swing.JFrame {
     
     private void onItemMenuClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onItemMenuClick
         // TODO add your handling code here:
-        showItemList();
         state.showItem();
+        showItemList();
     }//GEN-LAST:event_onItemMenuClick
 
     public void showItemList(){
@@ -223,16 +223,14 @@ public class MainPage extends javax.swing.JFrame {
     }
     private void onInvoiceMenuClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onInvoiceMenuClick
         // TODO add your handling code here:
-        showInvoiceList();
-        
         state.showInvoice();
+        showInvoiceList();
     }//GEN-LAST:event_onInvoiceMenuClick
 
     private void onDNMenuClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onDNMenuClick
         // TODO add your handling code here:
-        showDNList();
-        
         state.showDeliveryNote();
+        showDNList();
     }//GEN-LAST:event_onDNMenuClick
 
     private void onCreateDNMenuClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onCreateDNMenuClick
